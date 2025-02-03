@@ -1,0 +1,434 @@
+{% comment %}
+  Fully dynamic Shopify logo list section with customization options, native slider, and clickable logos.
+{% endcomment %}
+
+<section class="logo-list" style="background-color: {{ section.settings.bg_color }};">
+  <slider-component class="container {% if section.settings.section_width == "page" %}page-width {% else %} slider-component-full-width {% endif %}">
+    
+     {%- if section.settings.title != blank -%}
+        <h2 class="title inline-richtext logo-list__heading {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %} {{ section.settings.heading_alignment }}" style="color: {{ section.settings.text_color }}">
+          {{ section.settings.title }}
+        </h2>
+      {%- endif -%}
+      {% if section.settings.enable_slider %}
+    <div class="logo_wrapper">
+      <div class="c-icon"><i id="left">&lt</i></div>
+      {% endif %}
+    <div class="{% if section.settings.enable_slider %}logo-list__wrapper slider-box logo-slider {% else %} logo-grid-wrapper{% endif %}">
+      {% for block in section.blocks %}
+        <div class="slide-item logo-list__item logo-list__item--bg-color" style="--logo-bg-color: {{ section.settings.logo_background_color }};border-radius:{{section.settings.logo_border_radius}}px; --logo-padding:{{ section.settings.logo_padding }}px {{ section.settings.logo_padding_side }}px;
+  border: {{section.settings.border_width}}px solid {{section.settings.border_color}};">
+          {% if block.settings.logo_link != blank %}
+            <a href="{{ block.settings.logo_link }}" target="_blank" rel="noopener noreferrer">
+          {% endif %}
+          
+          {% if block.settings.logo != blank %}
+            <img src="{{ block.settings.logo | image_url }}" 
+                 alt="{{ block.settings.alt_text | escape }}" 
+                 width="{{ section.settings.logo_width }}px"
+                 height="auto"
+                 loading="lazy">
+          {% else %}
+            <span>No Logo Provided</span>
+          {% endif %}
+          
+          {% if block.settings.logo_link != blank %}
+            </a>
+          {% endif %}
+        </div>
+      {% endfor %}
+      
+    </div>
+      {% if section.settings.enable_slider %}
+            <div class="c-icon"><i id="right">&gt</i></div>
+    </div>
+      {% endif %}
+  </slider-component>
+</section>
+
+{% schema %}
+{
+  "name": "Logo List",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+  "type": "select",
+  "id": "section_width",
+  "label": "Section Width",
+  "default": "page",
+  "options": [
+    {
+      "value": "page",
+      "label": "Page Width"
+    },
+    {
+      "value": "full",
+      "label": "Full Width"
+    }
+  ]
+},
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Heading",
+      "default": "Our Partners"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        },
+        {
+          "value": "hxl",
+          "label": "t:sections.all.heading_size.options__4.label"
+        },
+        {
+          "value": "hxxl",
+          "label": "t:sections.all.heading_size.options__5.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+  "type": "select",
+  "id": "heading_alignment",
+  "label": "Heading Alignment",
+  "default": "center",
+  "options": [
+    {
+      "value": "left",
+      "label": "Left"
+    },
+    {
+      "value": "center",
+      "label": "Center"
+    },
+    {
+      "value": "right",
+      "label": "Right"
+    }
+  ]
+},
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_slider",
+      "label": "Enable Slider",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo Width (px)",
+      "min": 50,
+      "max": 300,
+      "step": 10,
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "border_width",
+      "label": "Logo Border Width (px)",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "logo_border_radius",
+      "label": "Border Radius (px)",
+      "min": 0,
+      "max": 50,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "range",
+      "id": "logo_padding",
+      "label": "Logo Padding Top-Bottom (px)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "logo_padding_side",
+      "label": "Logo Padding Left-Right(px)",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 10
+    },
+    {
+      "type": "color",
+      "id": "logo_background_color",
+      "label": "Logo Background Color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border Color",
+      "default": "#cccccc"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Upload Logo"
+        },
+        {
+          "type": "text",
+          "id": "alt_text",
+          "label": "Alt Text",
+          "default": "Brand Logo"
+        },
+        {
+          "type": "url",
+          "id": "logo_link",
+          "label": "Logo Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo List",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+{% style %}
+.logo-list {
+  padding: 40px 0;
+  text-align: center;
+}
+.logo-list__heading {
+  margin-bottom: 20px;
+  color:{{section.settings.text_color}}
+}
+  .logo-list__heading.left {
+  text-align: left;
+}
+
+.logo-list__heading.center {
+  text-align: center;
+}
+
+.logo-list__heading.right {
+  text-align: right;
+}
+  .logo-grid-wrapper{
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    width: fit-content;
+    margin: auto;
+  }
+  .logo_wrapper{
+  position: relative;
+  overflow-x: hidden;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 13px;
+  }
+
+.logo-list__item {
+  padding: var(--logo-padding);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius:{{section.settings.logo_border_radius}}px;
+  border: {{section.settings.border_width}}px solid {{section.settings.border_color}};
+}
+.logo-list__item img {
+  object-fit: contain;
+}
+.logo-list__item--bg-color {
+  background-color: var(--logo-bg-color);
+} 
+/* Clickable logos */
+.logo-list__item a {
+  display: inline-block;
+}
+
+/* Native Slider */
+.logo-slider {
+  display: flex;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  animation: slide 10s linear infinite;
+}
+
+.slider-box {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+  .slider-box.dragging {
+  scroll-behavior: auto;
+  cursor: grab;
+}
+.slider-box .slide-item {
+  cursor: pointer;
+  font-size: 1.18rem;
+  white-space: nowrap;
+}
+
+.slider-box.dragging .slide-item {
+  user-select: none;
+  pointer-events: none;
+}
+
+
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .logo-slider {
+    animation-duration: 15s;
+  }
+ .logo-list .slider-component-full-width{
+   margin: 0 1.5rem;
+ }
+  .logo-grid-wrapper{
+    justify-content:center;
+  }
+}
+  .c-icon {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 120px;
+  display: flex;
+  align-items: center;
+}
+.c-icon:first-child {
+  left: 0;
+  display: none;
+  background: linear-gradient(90deg, #fff 30%, transparent);
+}
+.c-icon:last-child {
+  right: 0;
+  justify-content: flex-end;
+  background: linear-gradient(-90deg, #fff 30%, transparent);
+}
+.c-icon i {
+  width: 55px;
+  height: 55px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-align: center;
+  line-height: 55px;
+  border-radius: 50%;
+}
+.c-icon i:hover {
+  background: #efedfb;
+}
+.c-icon:first-child i {
+  margin-left: 15px;
+}
+.c-icon:last-child i {
+  margin-right: 15px;
+}
+@media (max-width: 530px) {
+   .logo-grid-wrapper{
+    gap: 10px;
+   }
+
+  .logo-list__item img {
+      width:100px;
+      max-width:100%;
+  }
+  .logo-list__item{
+     padding:20px; 
+    max-width:47%;
+  }
+}
+
+  {% endstyle %}
+
+
+
+      {% if section.settings.enable_slider %}
+
+<script>
+  const tabsBox = document.querySelector(".slider-box"),
+  allTabs = tabsBox.querySelectorAll(".slide-item"),
+  arrowIcons = document.querySelectorAll(".c-icon i");
+let isDragging = false;
+
+const handleicons = (scrollVal) => {
+  let maxScrollableWidth = tabsBox.scrollWidth - tabsBox.clientWidth;
+  arrowIcons[0].parentElement.style.display = scrollVal <= 0 ? "none" : "flex";
+  arrowIcons[1].parentElement.style.display =
+    maxScrollableWidth - scrollVal <= 1 ? "none" : "flex";
+};
+
+arrowIcons.forEach((icon) => {
+  icon.addEventListener("click", () => {
+    // if clicked icon is left, reduce 350 from tabsBox scrollLeft else add
+    let scrollWidth = (tabsBox.scrollLeft += icon.id === "left" ? -340 : 340);
+    handleicons(scrollWidth);
+  });
+});
+
+allTabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabsBox.querySelector(".active").classList.remove("active");
+    tab.classList.add("active");
+  });
+});
+
+const dragging = (e) => {
+  if (!isDragging) return;
+  tabsBox.classList.add("dragging");
+  tabsBox.scrollLeft -= e.movementX;
+  handleicons(tabsBox.scrollLeft);
+};
+
+const dragStop = () => {
+  isDragging = false;
+  tabsBox.classList.remove("dragging");
+};
+
+tabsBox.addEventListener("mousedown", () => (isDragging = true));
+tabsBox.addEventListener("mousemove", dragging);
+document.addEventListener("mouseup", dragStop);
+</script>
+{% endif %}
